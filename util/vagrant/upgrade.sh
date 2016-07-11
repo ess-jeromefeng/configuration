@@ -257,7 +257,28 @@ fi
 # Eucalyptus details
 
 if [[ $TARGET == *eucalyptus* ]] ; then
-  sudo -u edxapp /edx/bin/pip.edxapp uninstall -y django-oauth-toolkit edx-oauth2-provider
+  echo "Uninstall edx-oauth2-provider"
+  sudo -u edxapp /edx/bin/pip.edxapp uninstall --disable-pip-version-check -y edx-oauth2-provider
+
+  echo "Upgrade the code"
+  cd configuration/playbooks/vagrant
+  sudo ansible-playbook \
+    --inventory-file=localhost, \
+    --connection=local \
+    $SERVER_VARS \
+    --extra-vars="edx_platform_version=$TARGET" \
+    --extra-vars="xqueue_version=$TARGET" \
+    --extra-vars="migrate_db=no" \
+    --skip-tags="edxapp-sandbox,gather_static_assets" \
+    vagrant-$CONFIGURATION-delta.yml
+  cd ../../..
+
+  echo "Install the latest prerequisites"
+  sudo -u edxapp /edx/bin/pip.edxapp install --disable-pip-version-check -r /edx/app/edxapp/edx-platform/requirements/edx/base.txt
+
+  echo "Migrate to fix oauth2_provider"
+  /edx/bin/edxapp-migrate-lms --fake oauth2_provider zero
+  /edx/bin/edxapp-migrate-lms --fake-initial
 fi
 
 # Update to target.
