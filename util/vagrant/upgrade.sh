@@ -253,6 +253,14 @@ EOF
   fi
 fi
 
+# Eucalyptus details
+
+if [[ $TARGET == *eucalyptus* ]] ; then
+  sudo -u edxapp /edx/bin/pip.edxapp uninstall -y django-oauth-toolkit edx-oauth2-provider
+fi
+
+# Update to target.
+
 echo "Updating to final version of code"
 cd configuration/playbooks
 echo "edx_platform_version: $TARGET" > vars.yml
@@ -267,6 +275,8 @@ sudo ansible-playbook \
     $SERVER_VARS \
     vagrant-$CONFIGURATION.yml
 cd ../..
+
+# Post-upgrade work.
 
 if [[ $TARGET == *dogwood* ]] ; then
   echo "Running data fixup management commands"
