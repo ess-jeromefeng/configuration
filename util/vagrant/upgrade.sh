@@ -2,6 +2,7 @@
 
 # Stop if any command fails
 set -e
+set -x
 
 # Logging
 sudo mkdir -p /var/log/edx
