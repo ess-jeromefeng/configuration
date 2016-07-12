@@ -257,8 +257,12 @@ fi
 # Eucalyptus details
 
 if [[ $TARGET == *eucalyptus* ]] ; then
+  sudo -u edxapp /edx/bin/pip.edxapp freeze | grep -i oauth
+
   echo "Uninstall edx-oauth2-provider"
   sudo -u edxapp /edx/bin/pip.edxapp uninstall --disable-pip-version-check -y django-oauth2-provider edx-oauth2-provider
+
+  sudo -u edxapp /edx/bin/pip.edxapp freeze | grep -i oauth
 
   echo "Upgrade the code"
   cd configuration/playbooks/vagrant
@@ -273,6 +277,8 @@ if [[ $TARGET == *eucalyptus* ]] ; then
     vagrant-$CONFIGURATION-delta.yml
   cd ../../..
 
+  sudo -u edxapp /edx/bin/pip.edxapp freeze | grep -i oauth
+  
   echo "Migrate to fix oauth2_provider"
   /edx/bin/edxapp-migrate-lms --fake oauth2_provider zero
   /edx/bin/edxapp-migrate-lms --fake-initial
