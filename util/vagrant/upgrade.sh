@@ -273,9 +273,6 @@ if [[ $TARGET == *eucalyptus* ]] ; then
     vagrant-$CONFIGURATION-delta.yml
   cd ../../..
 
-  echo "Install the latest prerequisites"
-  sudo -u edxapp /edx/bin/pip.edxapp install --disable-pip-version-check -r /edx/app/edxapp/edx-platform/requirements/edx/base.txt
-
   echo "Migrate to fix oauth2_provider"
   /edx/bin/edxapp-migrate-lms --fake oauth2_provider zero
   /edx/bin/edxapp-migrate-lms --fake-initial
