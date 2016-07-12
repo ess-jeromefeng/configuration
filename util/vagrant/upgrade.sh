@@ -258,7 +258,7 @@ fi
 
 if [[ $TARGET == *eucalyptus* ]] ; then
   echo "Uninstall edx-oauth2-provider"
-  sudo -u edxapp /edx/bin/pip.edxapp uninstall --disable-pip-version-check -y edx-oauth2-provider
+  sudo -u edxapp /edx/bin/pip.edxapp uninstall --disable-pip-version-check -y django-oauth2-provider edx-oauth2-provider
 
   echo "Upgrade the code"
   cd configuration/playbooks/vagrant
